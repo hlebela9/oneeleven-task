@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sort String API Test</title>
+    <style>
+        body { font-family: Arial; padding: 30px; background-color: #f4f4f4; }
+        input { padding: 10px; width: 250px; font-size: 16px; }
+        button { padding: 10px 15px; margin-left: 10px; font-size: 16px; cursor: pointer; }
+        #response { margin-top: 20px; font-weight: bold; color: #2a7f62; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Test Sort String API</h1>
+    <input type="text" id="data" placeholder="Enter a string">
+    <button onclick="sendData()">Sort</button>
+    <p>Response: <span id="response"></span></p>
+
+    <script>
+        async function sendData() {
+            const dataInput = document.getElementById('data');
+            const responseSpan = document.getElementById('response');
+            const data = dataInput.value.trim();
+
+            if (!data) {
+                responseSpan.textContent = 'Please enter a string!';
+                responseSpan.className = 'error';
+                return;
+            }
+
+            try {
+                const res = await fetch('/sort-string', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data })
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    responseSpan.textContent = JSON.stringify(result);
+                    responseSpan.className = '';
+                } else {
+                    responseSpan.textContent = result.error || 'Something went wrong';
+                    responseSpan.className = 'error';
+                }
+
+            } catch (err) {
+                responseSpan.textContent = 'Error connecting to API';
+                responseSpan.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>
